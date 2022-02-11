@@ -1,82 +1,33 @@
-import { useState } from "react";
 import "./App.css";
-import { toast } from "react-toastify";
-import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { Auth } from "./components/Auth";
+import { Upload } from "./components/Upload";
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 
 const App = () => {
-  const [thumbnail, setThumbnail] = useState("");
-  const [url, setUrl] = useState("");
+  const [user, setUser] = useState<string>("");
+  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
 
-  const upload = async (resourceType: any, file: any) => {
-    if (!file) return;
-    const formData = new FormData();
-    formData.append("upload_preset", "vaus-video");
-    formData.append("file", file);
-
-    let toastId: any = null;
-
-    const config = {
-      onUploadProgress: (p: any) => {
-        const progress = p.loaded / p.total;
-        if (toastId === null) {
-          toastId = toast("Upload in Progress", {
-            progress,
-          });
-        } else {
-          toast.update(toastId, {
-            progress,
-          });
-        }
-      },
-    };
-
-    try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_CLOUDINARY_ENDPOINT}/${resourceType}/upload`,
-        formData,
-        config
-      );
-
-      return data.secure_url;
-    } catch (err) {
-      console.log({ err });
-    }
-
-    toast.dismiss(toastId);
+  const handleUserSession = (token: string) => {
+    setUser(token);
+    setCookie("user", token, { path: "/" });
   };
 
-  const saveVideo = async () => {
-    if (!url) return;
-    // console.log("api", process.env.REACT_APP_VIDEO_API_BASE_URL);
-    try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_VIDEO_API_BASE_URL}`,
-        {
-          title: "video",
-          url: url,
-          lightningAddress: "danielm@zbd.gg",
-        }
-      );
-
-      console.log({ data });
-    } catch (err) {
-      console.log({ err });
-    }
+  const logOut = async () => {
+    setUser("");
+    removeCookie("user");
   };
 
-  const handleVideoUpload = async (e: any) => {
-    const file = e.target.files[0];
-
-    if (file) {
-      const data = await upload("video", file);
-      setUrl(data);
-      console.log({ data });
-      const ext = data.split(".").pop();
-      setThumbnail(data.replace(ext, "jpg"));
-    }
+  const checkUserCookie = () => {
+    if (cookies.user) setUser(cookies.user);
   };
+
+  useEffect(() => {
+    checkUserCookie();
+  }, []);
+
   return (
     <div className="App">
       <ToastContainer
@@ -84,25 +35,11 @@ const App = () => {
         position="top-right"
         closeButton={false}
       />
-      <input
-        style={{ marginTop: 200 }}
-        id="video-upload"
-        type="file"
-        accept="video/*"
-        onChange={handleVideoUpload}
-      />
-      <div>
-        {thumbnail && (
-          <img src={thumbnail} height="340" width="500" alt="thumbnail" />
-        )}
-      </div>
-      <button
-        style={{ marginTop: 100 }}
-        disabled={!url}
-        onClick={() => saveVideo()}
-      >
-        SUBMIT
-      </button>
+      {!user ? (
+        <Auth handleUserSession={handleUserSession} />
+      ) : (
+        <Upload logOut={logOut} />
+      )}
     </div>
   );
 };
