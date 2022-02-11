@@ -52,10 +52,11 @@ const App = () => {
     // console.log("api", process.env.REACT_APP_VIDEO_API_BASE_URL);
     try {
       const { data } = await axios.post(
-        `${process.env.REACT_APP_VIDEO_API_BASE_URL}/save`,
+        `${process.env.REACT_APP_VIDEO_API_BASE_URL}`,
         {
           title: "video",
           url: url,
+          lightningAddress: "danielm@zbd.gg",
         }
       );
 
