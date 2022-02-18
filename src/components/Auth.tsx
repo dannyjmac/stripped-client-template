@@ -26,9 +26,9 @@ const Toggle = styled.div`
 
 export const Auth = ({ handleUserSession }: any) => {
   const [isSignUp, setIsSignUp] = useState(true);
-  const [username, setUsername] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [username, setUsername] = useState<string>("danramac");
+  const [email, setEmail] = useState<string>("dr.mcgrane@gmail.com");
+  const [password, setPassword] = useState<string>("passwordtest");
 
   const handleSignup = async () => {
     try {
@@ -74,12 +74,18 @@ export const Auth = ({ handleUserSession }: any) => {
         <Input
           placeholder="username"
           onChange={(e) => setUsername(e.target.value)}
+          value={username}
         />
-        <Input placeholder="email" onChange={(e) => setEmail(e.target.value)} />
+        <Input
+          placeholder="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
         <Input
           type="password"
           onChange={(e) => setPassword(e.target.value)}
           placeholder="password"
+          value={password}
         />
         <button onClick={() => handleSignup()}>SUBMIT</button>
         <Toggle onClick={() => setIsSignUp(!isSignUp)}>Have an account?</Toggle>
@@ -90,11 +96,16 @@ export const Auth = ({ handleUserSession }: any) => {
   return (
     <Container>
       <Text>Login</Text>
-      <Input placeholder="email" onChange={(e) => setEmail(e.target.value)} />
+      <Input
+        placeholder="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
       <Input
         type="password"
         onChange={(e) => setPassword(e.target.value)}
         placeholder="password"
+        value={password}
       />
       <button onClick={() => handleLogin()}>SUBMIT</button>
       <Toggle onClick={() => setIsSignUp(!isSignUp)}>
