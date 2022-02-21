@@ -2,7 +2,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 
-export const Upload = ({ logOut }: any) => {
+export const Upload = ({ user }: any) => {
   const [thumbnail, setThumbnail] = useState("");
   const [url, setUrl] = useState("");
 
@@ -46,15 +46,14 @@ export const Upload = ({ logOut }: any) => {
 
   const saveVideo = async () => {
     if (!url) return;
-    // console.log("api", process.env.REACT_APP_VIDEO_API_BASE_URL);
     try {
       const { data } = await axios.post(
         `${process.env.REACT_APP_VIDEO_API_BASE_URL}`,
         {
           title: "video",
           url: url,
-          lightningAddress: "danielm@zbd.gg",
-        }
+        },
+        { headers: { Authorization: `Bearer ${user}` } }
       );
 
       console.log({ data });
@@ -94,9 +93,6 @@ export const Upload = ({ logOut }: any) => {
         onClick={() => saveVideo()}
       >
         SUBMIT
-      </button>
-      <button style={{ marginTop: 100 }} onClick={() => logOut()}>
-        LOGOUT
       </button>
     </div>
   );

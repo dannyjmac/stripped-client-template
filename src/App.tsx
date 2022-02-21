@@ -3,40 +3,33 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { Auth } from "./components/Auth";
 import { Upload } from "./components/Upload";
+import { Home } from "./components/Home";
+import { Viewer } from "./components/Viewer";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
-import axios from "axios";
-import { PaymentFlow } from "./components/PaymentFlow";
+
+import { Routes, Route, Link } from "react-router-dom";
+import { Navigation } from "./components/Navigation";
 
 const App = () => {
   const [user, setUser] = useState<string>("");
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);
-  const [invoice, setInvoice] = useState();
-
-  const handleUserSession = (token: string) => {
-    setUser(token);
-    setCookie("user", token, { path: "/" });
-  };
-
-  const logOut = async () => {
-    setUser("");
-    removeCookie("user");
-  };
 
   const checkUserCookie = () => {
     if (cookies.user) setUser(cookies.user);
   };
 
-  const getInvoice = async () => {
-    const data: any = await axios.get(
-      `http://localhost:4008/api/generateInvoice`
-    );
-    setInvoice(data.data.invoice.payment_request);
-  };
-
   useEffect(() => {
     checkUserCookie();
-  }, []);
+  });
+
+  const handleUserSession = (token: string) => {
+    setUser(token);
+    setCookie("user", token, {
+      path: "/",
+      expires: new Date(2025, 11, 24, 10, 33, 30, 0),
+    });
+  };
 
   return (
     <div className="App">
@@ -46,18 +39,26 @@ const App = () => {
         closeButton={false}
       />
       {!user ? (
-        <Auth handleUserSession={handleUserSession} />
+        <Auth
+          setUser={setUser}
+          setCookie={setCookie}
+          handleUserSession={handleUserSession}
+        />
       ) : (
-        <Upload logOut={logOut} />
+        <>
+          <Navigation
+            cookies={cookies}
+            removeCookie={removeCookie}
+            checkUserCookie={checkUserCookie}
+            setUser={setUser}
+          />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/upload" element={<Upload user={user} />} />
+            <Route path="/view" element={<Viewer />} />
+          </Routes>
+        </>
       )}
-      {/* TESTING WEBSOCKETS */}
-      <button
-        style={{ marginTop: 100, marginBottom: 100 }}
-        onClick={getInvoice}
-      >
-        Get invoice
-      </button>
-      {invoice && <PaymentFlow invoice={invoice} setInvoice={setInvoice} />}
     </div>
   );
 };

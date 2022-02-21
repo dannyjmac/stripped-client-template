@@ -54,14 +54,16 @@ export const Auth = ({ handleUserSession }: any) => {
   const handleLogin = async () => {
     try {
       const { data } = await axios.post(
-        `${process.env.REACT_APP_AUTH_API_BASE_URL}/signIn`,
+        `${process.env.REACT_APP_AUTH_API_BASE_URL}/login`,
         {
           email,
           password,
         }
       );
 
-      console.log({ data });
+      if (data.success) {
+        handleUserSession(data.token);
+      }
     } catch (err) {
       console.log({ err });
     }

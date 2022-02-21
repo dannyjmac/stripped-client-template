@@ -24,7 +24,6 @@ export const PaymentFlow = ({ invoice, setInvoice }: any) => {
   };
 
   const handleEvent = (event: any) => {
-    console.log("called");
     const data = JSON.parse(event.data);
     // TODO HANDLE THE INCOMING SOCKET MESSAGE
     console.log({ eventData: data });
