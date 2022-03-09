@@ -1,15 +1,19 @@
 import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { StoreProvider } from "./store";
+import { createStore } from "./store/store";
 import { Auth } from "./components/Auth";
 import { Upload } from "./components/Upload";
 import { Home } from "./components/Home";
-import { Viewer } from "./components/Viewer";
+import { ViewVideo } from "./components/ViewVideo";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
 import { Routes, Route, Link } from "react-router-dom";
 import { Navigation } from "./components/Navigation";
+
+const store = createStore();
 
 const App = () => {
   const [user, setUser] = useState<string>("");
@@ -32,34 +36,36 @@ const App = () => {
   };
 
   return (
-    <div className="App">
-      <ToastContainer
-        autoClose={2500}
-        position="top-right"
-        closeButton={false}
-      />
-      {!user ? (
-        <Auth
-          setUser={setUser}
-          setCookie={setCookie}
-          handleUserSession={handleUserSession}
+    <StoreProvider store={store}>
+      <div className="App">
+        <ToastContainer
+          autoClose={2500}
+          position="top-right"
+          closeButton={false}
         />
-      ) : (
-        <>
-          <Navigation
-            cookies={cookies}
-            removeCookie={removeCookie}
-            checkUserCookie={checkUserCookie}
+        {!user ? (
+          <Auth
             setUser={setUser}
+            setCookie={setCookie}
+            handleUserSession={handleUserSession}
           />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/upload" element={<Upload user={user} />} />
-            <Route path="/view" element={<Viewer />} />
-          </Routes>
-        </>
-      )}
-    </div>
+        ) : (
+          <>
+            <Navigation
+              cookies={cookies}
+              removeCookie={removeCookie}
+              checkUserCookie={checkUserCookie}
+              setUser={setUser}
+            />
+            <Routes>
+              <Route path="/" element={<Home user={user} />} />
+              <Route path="/upload" element={<Upload user={user} />} />
+              <Route path="/view/:id" element={<ViewVideo user={user} />} />
+            </Routes>
+          </>
+        )}
+      </div>
+    </StoreProvider>
   );
 };
 
