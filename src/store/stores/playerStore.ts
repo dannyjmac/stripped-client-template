@@ -32,4 +32,44 @@ export default class PlayerStore {
       console.log("Error getting Video", id);
     }
   }
+
+  /**
+   * User likes a video
+   */
+  async likeVideo(userId: string, videoId: string) {
+    try {
+      const data = await this._store.api.videoAPI.likeVideo(userId, videoId);
+      if (data?.data?.result) this.video = data.data.result;
+    } catch (err) {
+      console.log("Error liking Video", videoId);
+    }
+  }
+
+  /**
+   * User disikes a video
+   */
+  async dislikeVideo(userId: string, videoId: string) {
+    try {
+      const data = await this._store.api.videoAPI.dislikeVideo(userId, videoId);
+      if (data?.data?.result) this.video = data.data.result;
+    } catch (err) {
+      console.log("Error liking Video", videoId);
+    }
+  }
+
+  /**
+   * User disikes a video
+   */
+  async commentVideo(comment: string, userId: string, videoId: string) {
+    try {
+      const data = await this._store.api.videoAPI.commentVideo(
+        comment,
+        userId,
+        videoId
+      );
+      if (data?.data?.result) this.video = data.data.result;
+    } catch (err) {
+      console.log("Error liking Video", videoId);
+    }
+  }
 }

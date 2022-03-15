@@ -38,9 +38,32 @@ export const VideoPlayer = (props: any) => {
   }, [playerRef]);
 
   return (
-    <div style={{ margin: "0 auto", maxWidth: 800 }}>
+    <div
+      style={{
+        margin: "0 auto",
+        maxWidth: 800,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <div data-vjs-player>
         <video ref={videoRef} className="video-js vjs-big-play-centered" />
+      </div>
+      <div>
+        <button style={{ width: 100, marginTop: 10 }}>TIP</button>
+        <div>1</div>
+      </div>
+      <div>
+        <button style={{ width: 100, marginTop: 10 }}>LIKE</button>
+        <div>1</div>
+      </div>
+      <div>
+        <button style={{ width: 100, marginTop: 10 }}>DISLIKE</button>
+        <div>1</div>
+      </div>
+      <div>
+        <input></input>
+        <button style={{ width: 100, marginTop: 10 }}>COMMENT</button>
       </div>
     </div>
   );

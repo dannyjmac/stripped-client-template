@@ -16,6 +16,25 @@ export class VideoAPI {
     });
   }
 
+  likeVideo = async (userId: string, videoId: string) => {
+    const result = await this.api.post("/like", { userId, videoId });
+    return result;
+  };
+
+  dislikeVideo = async (userId: string, videoId: string) => {
+    const result = await this.api.post(`/dislike`, { userId, videoId });
+    return result;
+  };
+
+  commentVideo = async (comment: string, userId: string, videoId: string) => {
+    const result = await this.api.post(`/comment`, {
+      comment,
+      userId,
+      videoId,
+    });
+    return result;
+  };
+
   getVideoById = async (id: string) => {
     const result = await this.api.get(`/video?id=${id}`);
     return result;
