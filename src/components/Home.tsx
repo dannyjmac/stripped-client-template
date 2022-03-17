@@ -26,7 +26,7 @@ export const Home = observer(({ user }: any) => {
             borderColor: "black",
             borderStyle: "solid",
           }}
-          key={video._id}
+          key={video.id}
         >
           <div
             style={{
@@ -38,7 +38,7 @@ export const Home = observer(({ user }: any) => {
           >
             {video.title}
           </div>
-          <Link to={`/view/${video._id}`}>
+          <Link to={`/view/${video.id}`}>
             <img
               onClick={() => console.log("called video")}
               style={{ maxWidth: 300 }}

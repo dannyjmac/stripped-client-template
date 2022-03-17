@@ -1,8 +1,9 @@
 import { makeAutoObservable, runInAction, toJS } from "mobx";
 import { Store } from "../store";
 
+// TODO - REDO THIS - and centralise
 interface Video {
-  _id: string;
+  id: string;
   title: string;
   url: string;
   username: string;

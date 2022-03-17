@@ -1,8 +1,9 @@
 import { makeAutoObservable, runInAction, toJS } from "mobx";
 import { Store } from "../store";
 
+// TODO - REDO THIS
 interface Video {
-  _id: string;
+  id: string;
   title: string;
   url: string;
   username: string;
@@ -27,7 +28,7 @@ export default class PlayerStore {
   async getVideo(id: string) {
     try {
       const data = await this._store.api.videoAPI.getVideoById(id);
-      if (data?.data?.result) this.video = data.data.result;
+      if (data?.data) this.video = data.data;
     } catch (err) {
       console.log("Error getting Video", id);
     }
