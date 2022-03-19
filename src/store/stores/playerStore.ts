@@ -1,11 +1,11 @@
 import { makeAutoObservable, runInAction, toJS } from "mobx";
-import { Video } from "../../types";
+import { Player, Video } from "../../types";
 import { Store } from "../store";
 
 export default class PlayerStore {
   private _store: Store;
 
-  video: Video | null = null;
+  video: Player | null = null;
   numLikes: number | null = null;
   numDislikes: number | null = null;
   hasUserLiked: boolean = false;

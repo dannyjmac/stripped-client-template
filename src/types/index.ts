@@ -3,7 +3,7 @@ export interface Video {
   title: string;
   url: string;
   username: string;
-  walletId: string;
+  recieveKey: string;
   userId: string;
   likes: {
     numDislikes: number;
@@ -13,9 +13,40 @@ export interface Video {
   };
 }
 
+export interface Player {
+  _id: string;
+  title: string;
+  url: string;
+  author: {
+    username: string;
+    userId: string;
+    walletId: string;
+    recieveKey: string;
+  };
+  likes: {
+    numLikesL: string;
+    numDislikes: string;
+    hasUserDisliked: string;
+    hasUserLiked: string;
+  };
+}
+
 export interface User {
   username: string;
   userId: string;
   walletId: string;
+  recieveKey: string;
   token: string;
+}
+
+export interface Invoice {
+  id: string;
+  memo: string;
+  ammountSats: number;
+  createdAt: number;
+  destPubkey: string;
+  expiresAt: number;
+  walletId: string;
+  sessionId: string;
+  pr: string;
 }

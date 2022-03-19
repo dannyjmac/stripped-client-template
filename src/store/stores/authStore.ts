@@ -44,11 +44,14 @@ export default class AuthStore {
 
   setUser(token: string) {
     if (token) {
-      const { userId, username, walletId } = jwt_decode(token) as any;
+      const { userId, username, walletId, recieveKey } = jwt_decode(
+        token
+      ) as any;
       this.currentUser = {
         userId,
         username,
         walletId,
+        recieveKey,
         token,
       };
     }

@@ -3,9 +3,10 @@ import { useParams } from "react-router-dom";
 import VideoPlayer from "./VideoPlayer";
 import { useStore } from "../store";
 import { observer } from "mobx-react-lite";
+import QRCode from "react-qr-code";
 
 export const ViewVideo = observer(() => {
-  const { playerStore, videoStore } = useStore();
+  const { playerStore, lightningStore } = useStore();
   const { id } = useParams();
   const playerRef = useRef(null);
 
@@ -25,6 +26,13 @@ export const ViewVideo = observer(() => {
     player.on("dispose", () => {
       console.log("player will dispose");
     });
+  };
+
+  const handleTipVideo = () => {
+    const { generateInvoice } = lightningStore;
+
+    if (!playerStore?.video?.author.recieveKey) return;
+    generateInvoice(playerStore?.video?.author.recieveKey, 100);
   };
 
   const handleLikeVideo = () => {
@@ -73,39 +81,40 @@ export const ViewVideo = observer(() => {
   return (
     <div>
       <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
-      <div>
-        <button onClick={() => {}} style={{ width: 100, marginTop: 10 }}>
-          TIP
-        </button>
-        <div>-</div>
-      </div>
-      <div>
-        <button
-          disabled={hasUserLiked}
-          onClick={() => handleLikeVideo()}
-          style={{ width: 100, marginTop: 10 }}
-        >
-          {!hasUserLiked ? "LIKE" : "LIKED :)"}
-        </button>
-        <div>{numLikes}</div>
-      </div>
-      <div>
-        <button
-          disabled={hasUserDisliked}
-          onClick={() => handleDislikeVideo()}
-          style={{ width: 100, marginTop: 10 }}
-        >
-          {!hasUserDisliked ? "DISLIKE" : "DISLIKED :("}
-        </button>
-        <div>{numDislikes}</div>
-      </div>
-      {/* <button
-        style={{ marginTop: 100, marginBottom: 100 }}
-        onClick={getInvoice}
+      <div
+        style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}
       >
-        Get invoice
-      </button> */}
-      {/* {invoice && <PaymentFlow invoice={invoice} setInvoice={setInvoice} />} */}
+        <div>
+          <button
+            onClick={handleTipVideo}
+            style={{ width: 100, marginTop: 10 }}
+          >
+            TIP
+          </button>
+          <div>-</div>
+        </div>
+        <div>
+          <button
+            disabled={hasUserLiked}
+            onClick={handleLikeVideo}
+            style={{ width: 100, marginTop: 10 }}
+          >
+            {!hasUserLiked ? "LIKE" : "LIKED :)"}
+          </button>
+          <div>{numLikes}</div>
+        </div>
+        <div>
+          <button
+            disabled={hasUserDisliked}
+            onClick={handleDislikeVideo}
+            style={{ width: 100, marginTop: 10 }}
+          >
+            {!hasUserDisliked ? "DISLIKE" : "DISLIKED :("}
+          </button>
+          <div>{numDislikes}</div>
+        </div>
+      </div>
+      {lightningStore.invoice && <QRCode value={lightningStore.invoice.pr} />}
     </div>
   );
 });
