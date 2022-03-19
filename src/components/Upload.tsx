@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useStore } from "../store";
 
-export const Upload = ({ user }: any) => {
+export const Upload = () => {
   const [thumbnail, setThumbnail] = useState("");
   const [url, setUrl] = useState("");
+  const { authStore } = useStore();
 
+  // TODO - ADD Upload to API service
   const upload = async (resourceType: any, file: any) => {
     if (!file) return;
+    if (!authStore.currentUser) return;
     const formData = new FormData();
     formData.append("upload_preset", "vaus-video");
     formData.append("file", file);
@@ -46,6 +50,7 @@ export const Upload = ({ user }: any) => {
 
   const saveVideo = async () => {
     if (!url) return;
+    if (!authStore.currentUser) return;
     try {
       const { data } = await axios.post(
         `${process.env.REACT_APP_VIDEO_API_BASE_URL}`,
@@ -53,7 +58,7 @@ export const Upload = ({ user }: any) => {
           title: "video",
           url: url,
         },
-        { headers: { Authorization: `Bearer ${user}` } }
+        { headers: { Authorization: `Bearer ${authStore.currentUser.token}` } }
       );
 
       console.log({ data });

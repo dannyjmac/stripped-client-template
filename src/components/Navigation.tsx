@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 import { Routes, Route, Link } from "react-router-dom";
+import { useStore } from "../store";
 
-export const Navigation = ({ setUser, removeCookie }: any) => {
+export const Navigation = () => {
+  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
+  const { authStore } = useStore();
+
   const logOut = async () => {
-    setUser("");
+    authStore.setUser("");
     removeCookie("user");
   };
+
   return (
     <div
       style={{

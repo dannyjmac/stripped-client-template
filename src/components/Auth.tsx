@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { useStore } from "../store";
 
 const Container = styled.div`
   height: 100vh;
@@ -24,49 +25,20 @@ const Toggle = styled.div`
   cursor: pointer;
 `;
 
-export const Auth = ({ handleUserSession }: any) => {
+export const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(true);
   const [username, setUsername] = useState<string>("danramac");
   const [email, setEmail] = useState<string>("dr.mcgrane@gmail.com");
   const [password, setPassword] = useState<string>("passwordtest");
 
+  const { authStore } = useStore();
+
   const handleSignup = async () => {
-    try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_AUTH_API_BASE_URL}/signUp`,
-        {
-          email,
-          username,
-          password,
-        }
-      );
-
-      if (data.success) {
-        handleUserSession(data.token);
-      }
-
-      console.log({ data });
-    } catch (err) {
-      console.log({ err });
-    }
+    authStore.signUp(email, username, password);
   };
 
   const handleLogin = async () => {
-    try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_AUTH_API_BASE_URL}/login`,
-        {
-          email,
-          password,
-        }
-      );
-
-      if (data.success) {
-        handleUserSession(data.token);
-      }
-    } catch (err) {
-      console.log({ err });
-    }
+    authStore.login(email, password);
   };
 
   if (isSignUp) {

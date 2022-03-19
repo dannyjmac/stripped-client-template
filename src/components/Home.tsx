@@ -4,11 +4,12 @@ import { Link } from "react-router-dom";
 import { useStore } from "../store";
 
 export const Home = observer(({ user }: any) => {
-  const { videoStore } = useStore();
+  const { videoStore, authStore } = useStore();
 
   useEffect(() => {
-    videoStore.getUserVideos(user);
-  }, []);
+    if (authStore.currentUser)
+      videoStore.getUserVideos(authStore.currentUser.userId);
+  }, [authStore.currentUser]);
 
   if (!videoStore.userVideos) return <div>loading</div>;
   if (!videoStore.userVideos) return <div>No videos, sorry</div>;
@@ -26,7 +27,7 @@ export const Home = observer(({ user }: any) => {
             borderColor: "black",
             borderStyle: "solid",
           }}
-          key={video.id}
+          key={video._id}
         >
           <div
             style={{
@@ -38,9 +39,8 @@ export const Home = observer(({ user }: any) => {
           >
             {video.title}
           </div>
-          <Link to={`/view/${video.id}`}>
+          <Link to={`/view/${video._id}`}>
             <img
-              onClick={() => console.log("called video")}
               style={{ maxWidth: 300 }}
               src={video.url.split(".").slice(0, -1).join(".").concat(".jpeg")}
             />

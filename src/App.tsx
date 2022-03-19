@@ -1,72 +1,63 @@
 import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
+
+import { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import { useCookies } from "react-cookie";
 import { ToastContainer } from "react-toastify";
-import { StoreProvider } from "./store";
-import { createStore } from "./store/store";
+import { observer } from "mobx-react-lite";
+
+import { useStore } from "./store";
 import { Auth } from "./components/Auth";
 import { Upload } from "./components/Upload";
 import { Home } from "./components/Home";
 import { ViewVideo } from "./components/ViewVideo";
-import { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
-
-import { Routes, Route, Link } from "react-router-dom";
 import { Navigation } from "./components/Navigation";
 
-const store = createStore();
+const App = observer(() => {
+  const { authStore } = useStore();
+  const [cookies, setCookie] = useCookies(["user"]);
 
-const App = () => {
-  const [user, setUser] = useState<string>("");
-  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
-
-  const checkUserCookie = () => {
-    if (cookies.user) setUser(cookies.user);
-  };
-
+  // If user loads app and has a user cookie, update the state
   useEffect(() => {
-    checkUserCookie();
+    if (cookies.user && !authStore.currentUser) {
+      authStore.setUser(cookies.user);
+    }
   });
 
-  const handleUserSession = (token: string) => {
-    setUser(token);
-    setCookie("user", token, {
-      path: "/",
-      expires: new Date(2025, 11, 24, 10, 33, 30, 0),
-    });
-  };
+  // If the state updates, but there is no cookie, update cookie
+  useEffect(() => {
+    if (authStore.currentUser && !cookies.user) {
+      setCookie("user", authStore.currentUser.token, {
+        path: "/",
+        expires: new Date(2025, 11, 24, 10, 33, 30, 0),
+      });
+    }
+  }, [authStore.currentUser]);
+
+  const { currentUser } = authStore;
 
   return (
-    <StoreProvider store={store}>
-      <div className="App">
-        <ToastContainer
-          autoClose={2500}
-          position="top-right"
-          closeButton={false}
-        />
-        {!user ? (
-          <Auth
-            setUser={setUser}
-            setCookie={setCookie}
-            handleUserSession={handleUserSession}
-          />
-        ) : (
-          <>
-            <Navigation
-              cookies={cookies}
-              removeCookie={removeCookie}
-              checkUserCookie={checkUserCookie}
-              setUser={setUser}
-            />
-            <Routes>
-              <Route path="/" element={<Home user={user} />} />
-              <Route path="/upload" element={<Upload user={user} />} />
-              <Route path="/view/:id" element={<ViewVideo user={user} />} />
-            </Routes>
-          </>
-        )}
-      </div>
-    </StoreProvider>
+    <div className="App">
+      <ToastContainer
+        autoClose={2500}
+        position="top-right"
+        closeButton={false}
+      />
+      {!currentUser ? (
+        <Auth />
+      ) : (
+        <>
+          <Navigation />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/upload" element={<Upload />} />
+            <Route path="/view/:id" element={<ViewVideo />} />
+          </Routes>
+        </>
+      )}
+    </div>
   );
-};
+});
 
 export default App;

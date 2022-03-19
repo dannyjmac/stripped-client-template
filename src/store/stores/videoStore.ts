@@ -1,15 +1,6 @@
 import { makeAutoObservable, runInAction, toJS } from "mobx";
+import { Video } from "../../types";
 import { Store } from "../store";
-
-// TODO - REDO THIS - and centralise
-interface Video {
-  id: string;
-  title: string;
-  url: string;
-  username: string;
-  walletId: string;
-  userId: string;
-}
 
 export default class VideoStore {
   private _store: Store;
@@ -25,9 +16,9 @@ export default class VideoStore {
   /**
    * Gets all videos by a user id
    */
-  async getUserVideos(user: string) {
+  async getUserVideos(userId: string) {
     try {
-      const data = await this._store.api.videoAPI.getVideosByUserId(user);
+      const data = await this._store.api.videoAPI.getVideosByUserId(userId);
       if (data?.data?.results) this.userVideos = data.data.results;
     } catch (err) {
       console.log("Error getting videos by user");
