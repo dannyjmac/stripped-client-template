@@ -1,4 +1,5 @@
 import axios from "axios";
+import { GenerateTipInvoiceProps } from "../types";
 
 const defaultHeaders = {
   "Content-Type": "application/json",
@@ -21,10 +22,26 @@ export default class LightningAPI {
     );
   }
 
-  generateInvoice = async (recieveKey: string, value: number) => {
+  generateInvoice = async (
+    amount: number,
+    {
+      tipperUserId,
+      destinationWalletId,
+      recieverUserId,
+      videoId,
+      videoTime,
+    }: GenerateTipInvoiceProps
+  ) => {
+    console.log({
+      tipperUserId,
+      destinationWalletId,
+      recieverUserId,
+      videoId,
+      videoTime,
+    });
     try {
       const data = await this.api.get(
-        `/invoice?value=${value}&recieveKey=${recieveKey}`
+        `/invoice?amount=${amount}&destinationWalletId=${destinationWalletId}&tipperUserId=${tipperUserId}&recieverUserId=${recieverUserId}&videoId=${videoId}&videoTime=${videoTime}`
       );
       return data?.data?.invoice;
     } catch (err) {

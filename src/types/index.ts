@@ -24,7 +24,7 @@ export interface Player {
     recieveKey: string;
   };
   likes: {
-    numLikesL: string;
+    numLikes: string;
     numDislikes: string;
     hasUserDisliked: string;
     hasUserLiked: string;
@@ -49,4 +49,12 @@ export interface Invoice {
   walletId: string;
   sessionId: string;
   pr: string;
+}
+
+export interface GenerateTipInvoiceProps {
+  tipperUserId: string;
+  destinationWalletId: string;
+  recieverUserId: string;
+  videoId: string;
+  videoTime: number;
 }

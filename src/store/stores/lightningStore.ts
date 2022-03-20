@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction, toJS } from "mobx";
 import { Store } from "../store";
-import { Invoice } from "../../types";
+import { GenerateTipInvoiceProps, Invoice } from "../../types";
 
 export default class LightningStore {
   private _store: Store;
@@ -17,11 +17,26 @@ export default class LightningStore {
   /**
    * Generate Invoice
    */
-  async generateInvoice(recieveKey: string, value: number) {
+  async generateInvoice(
+    amount: number,
+    {
+      destinationWalletId,
+      tipperUserId,
+      recieverUserId,
+      videoId,
+      videoTime,
+    }: GenerateTipInvoiceProps
+  ) {
     try {
       const result = await this._store.api.lightningAPI.generateInvoice(
-        recieveKey,
-        value
+        amount,
+        {
+          destinationWalletId,
+          tipperUserId,
+          recieverUserId,
+          videoId,
+          videoTime,
+        }
       );
 
       this.invoice = {
@@ -38,7 +53,7 @@ export default class LightningStore {
 
       this.listenForPayments(result.id);
     } catch (err) {
-      console.log("Error signing up user");
+      console.log("Error creating an invoice for payment");
     }
   }
 

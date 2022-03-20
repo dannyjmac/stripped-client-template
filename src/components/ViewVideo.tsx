@@ -6,7 +6,7 @@ import { observer } from "mobx-react-lite";
 import QRCode from "react-qr-code";
 
 export const ViewVideo = observer(() => {
-  const { playerStore, lightningStore } = useStore();
+  const { playerStore, lightningStore, authStore } = useStore();
   const { id } = useParams();
   const playerRef = useRef(null);
 
@@ -30,9 +30,16 @@ export const ViewVideo = observer(() => {
 
   const handleTipVideo = () => {
     const { generateInvoice } = lightningStore;
+    if (!authStore.currentUser?.userId) return;
+    if (!playerStore?.video?.author.walletId) return;
 
-    if (!playerStore?.video?.author.recieveKey) return;
-    generateInvoice(playerStore?.video?.author.recieveKey, 100);
+    generateInvoice(10, {
+      destinationWalletId: playerStore?.video?.author.walletId,
+      tipperUserId: authStore.currentUser?.userId,
+      recieverUserId: playerStore?.video?.author.userId,
+      videoId: playerStore?.video?._id,
+      videoTime: 0,
+    });
   };
 
   const handleLikeVideo = () => {
