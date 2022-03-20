@@ -6,6 +6,7 @@ export default class LightningStore {
   private _store: Store;
 
   invoice: Invoice | null = null;
+  socket: WebSocket | null = null;
 
   constructor(store: Store) {
     makeAutoObservable(this, {}, { deep: false, autoBind: true });
@@ -35,9 +36,28 @@ export default class LightningStore {
         pr: result.payment_request,
       };
 
-      console.log({ invoice: this.invoice });
+      this.listenForPayments(result.id);
     } catch (err) {
       console.log("Error signing up user");
+    }
+  }
+
+  async listenForPayments(id: string) {
+    const socket = await this._store.api.lightningAPI.getEventsSocket(id);
+    this.socket = socket;
+    this.socket.addEventListener("message", this.handleSocketEvent, true);
+  }
+
+  handleSocketEvent(data: any) {
+    console.log("data", data);
+    this.reset();
+  }
+
+  reset() {
+    if (this.socket) {
+      this.socket.removeEventListener("message", this.handleSocketEvent, true);
+      this.socket = null;
+      this.invoice = null;
     }
   }
 }

@@ -15,6 +15,12 @@ export default class LightningAPI {
     });
   }
 
+  async getEventsSocket(id: string) {
+    return new WebSocket(
+      `${process.env.REACT_APP_LIGHTNING_WS_BASE_URL}/?invoiceId=${id}`
+    );
+  }
+
   generateInvoice = async (recieveKey: string, value: number) => {
     try {
       const data = await this.api.get(
