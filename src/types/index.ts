@@ -5,7 +5,7 @@ export interface Video {
   username: string;
   recieveKey: string;
   userId: string;
-  likes: {
+  stats: {
     numDislikes: number;
     numLikes: number;
     hasUserLiked: boolean;
@@ -23,7 +23,7 @@ export interface Player {
     walletId: string;
     recieveKey: string;
   };
-  likes: {
+  stats: {
     numLikes: string;
     numDislikes: string;
     hasUserDisliked: string;

@@ -28,13 +28,13 @@ export default class PlayerStore {
         user ? user.userId : undefined
       );
       if (data?.data) this.video = data.data;
-      this.numLikes = data?.data?.likes?.numLikes;
-      this.numDislikes = data?.data?.likes?.numDislikes;
-      if (data?.data?.likes?.hasUserLiked) {
+      this.numLikes = data?.data?.stats?.numLikes;
+      this.numDislikes = data?.data?.stats?.numDislikes;
+      if (data?.data?.stats?.hasUserLiked) {
         this.hasUserLiked = true;
         this.hasUserDisliked = false;
       }
-      if (data?.data?.likes?.hasUserDisliked) {
+      if (data?.data?.stats?.hasUserDisliked) {
         this.hasUserLiked = false;
         this.hasUserDisliked = true;
       }
