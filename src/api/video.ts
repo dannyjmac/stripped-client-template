@@ -33,12 +33,22 @@ export default class VideoAPI {
     return result;
   };
 
-  commentVideo = async (comment: string, userId: string, videoId: string) => {
-    const result = await this.api.post(`/comment`, {
-      comment,
-      userId,
-      videoId,
-    });
+  commentVideo = async (
+    comment: string,
+    videoId: string,
+    userId: string,
+    token: string
+  ) => {
+    const result = await this.api.post(
+      `/comment`,
+      {
+        comment,
+        userId,
+        videoId,
+      },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    console.log({ result });
     return result;
   };
 

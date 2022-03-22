@@ -13,6 +13,15 @@ export interface Video {
   };
 }
 
+export interface Comment {
+  hasUserUpvoted: boolean;
+  id: string;
+  upvotes: number;
+  userId: string;
+  videoId: string;
+  text: string;
+}
+
 export interface Player {
   _id: string;
   title: string;

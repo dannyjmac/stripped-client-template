@@ -1,5 +1,5 @@
 import { makeAutoObservable, runInAction, toJS } from "mobx";
-import { Player, Video } from "../../types";
+import { Player, Video, Comment } from "../../types";
 import { Store } from "../store";
 
 export default class PlayerStore {
@@ -10,6 +10,7 @@ export default class PlayerStore {
   numDislikes: number | null = null;
   hasUserLiked: boolean = false;
   hasUserDisliked: boolean = false;
+  comments: Comment[] | null = null;
 
   constructor(store: Store) {
     makeAutoObservable(this, {}, { deep: false, autoBind: true });
@@ -30,6 +31,7 @@ export default class PlayerStore {
       if (data?.data) this.video = data.data;
       this.numLikes = data?.data?.stats?.numLikes;
       this.numDislikes = data?.data?.stats?.numDislikes;
+      this.comments = data?.data?.stats?.comments;
       if (data?.data?.stats?.hasUserLiked) {
         this.hasUserLiked = true;
         this.hasUserDisliked = false;
@@ -88,14 +90,16 @@ export default class PlayerStore {
   }
 
   /**
-   * User disikes a video
+   * User comments on a video
    */
-  async commentVideo(comment: string, userId: string, videoId: string) {
+  async commentVideo(comment: string, videoId: string) {
+    if (!this._store.authStore.currentUser) return;
     try {
       const data = await this._store.api.videoAPI.commentVideo(
         comment,
-        userId,
-        videoId
+        videoId,
+        this._store.authStore.currentUser.userId,
+        this._store.authStore.currentUser.token
       );
       if (data?.data?.result) this.video = data.data.result;
     } catch (err) {

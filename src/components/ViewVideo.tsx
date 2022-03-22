@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import VideoPlayer from "./VideoPlayer";
 import { useStore } from "../store";
@@ -7,6 +7,9 @@ import QRCode from "react-qr-code";
 
 export const ViewVideo = observer(() => {
   const { playerStore, lightningStore, authStore } = useStore();
+
+  const [comment, setComment] = useState<string>("");
+
   const { id } = useParams();
   const playerRef = useRef(null);
 
@@ -58,6 +61,17 @@ export const ViewVideo = observer(() => {
     dislikeVideo(videoId);
   };
 
+  const handleCommentVideo = () => {
+    const { commentVideo } = playerStore;
+    const videoId = playerStore?.video?._id;
+    const userId = authStore.currentUser?.userId;
+
+    if (!videoId) return;
+    if (!comment) return;
+    if (!userId) return;
+    commentVideo(comment, videoId);
+  };
+
   if (!playerStore.video) return <div>loading</div>;
 
   const videoJsOptions = {
@@ -77,13 +91,10 @@ export const ViewVideo = observer(() => {
     ],
   };
 
-  const {
-    video: { likes },
-    hasUserDisliked,
-    hasUserLiked,
-    numLikes,
-    numDislikes,
-  } = playerStore;
+  const { hasUserDisliked, hasUserLiked, numLikes, numDislikes, comments } =
+    playerStore;
+
+  console.log({ comments });
 
   return (
     <div>
@@ -122,6 +133,19 @@ export const ViewVideo = observer(() => {
         </div>
       </div>
       {lightningStore.invoice && <QRCode value={lightningStore.invoice.pr} />}
+      <textarea
+        onChange={(e) => setComment(e.currentTarget.value)}
+        style={{ width: 500, height: 100 }}
+        value={comment}
+      />
+      <button onClick={handleCommentVideo}>Submit</button>
+      <div style={{ marginTop: 15 }}>Comments</div>
+      {comments?.map((comment) => (
+        <div style={{ margin: "20px 0px" }}>
+          {comment.text}
+          <button style={{ marginLeft: 10 }}>UPVOTE</button>
+        </div>
+      ))}
     </div>
   );
 });
