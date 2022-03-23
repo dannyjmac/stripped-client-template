@@ -32,6 +32,7 @@ export default class PlayerStore {
       this.numLikes = data?.data?.stats?.numLikes;
       this.numDislikes = data?.data?.stats?.numDislikes;
       this.comments = data?.data?.stats?.comments;
+
       if (data?.data?.stats?.hasUserLiked) {
         this.hasUserLiked = true;
         this.hasUserDisliked = false;
@@ -101,9 +102,64 @@ export default class PlayerStore {
         this._store.authStore.currentUser.userId,
         this._store.authStore.currentUser.token
       );
+
+      console.log(data.data);
+      console.log(this.comments);
+
+      const newComment = {
+        hasUserUpvoted: false,
+        id: data.data.id,
+        upvotes: 0,
+        text: data.data.comment,
+        userId: data.data.userId,
+        videoId: data.data.videoId,
+      };
+
+      if (this.comments) {
+        this.comments = [newComment, ...this.comments];
+      } else {
+        this.comments = [newComment];
+      }
+
       if (data?.data?.result) this.video = data.data.result;
     } catch (err) {
       console.log("Error liking Video", videoId);
+    }
+  }
+
+  /**
+   * User upvotes on a comment
+   */
+  async upvoteComment(commentId: string, videoId: string) {
+    console.log({ commentId, videoId });
+    if (!this._store.authStore.currentUser) return;
+    try {
+      const data = await this._store.api.videoAPI.upvoteComment(
+        commentId,
+        videoId,
+        this._store.authStore.currentUser.userId,
+        this._store.authStore.currentUser.token
+      );
+
+      if (!this.comments) return;
+      const newComments = this.comments.map((comment) => {
+        if (comment.id === commentId) {
+          return {
+            ...comment,
+            hasUserUpvoted: true,
+          };
+        } else {
+          return {
+            ...comment,
+          };
+        }
+      });
+
+      this.comments = newComments;
+
+      if (data?.data?.result) this.video = data.data.result;
+    } catch (err) {
+      console.log("Error upvoting comment");
     }
   }
 }

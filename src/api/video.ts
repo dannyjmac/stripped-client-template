@@ -48,7 +48,25 @@ export default class VideoAPI {
       },
       { headers: { Authorization: `Bearer ${token}` } }
     );
-    console.log({ result });
+    return result;
+  };
+
+  upvoteComment = async (
+    commentId: string,
+    videoId: string,
+    userId: string,
+    token: string
+  ) => {
+    console.log("and here");
+    const result = await this.api.post(
+      `/comment-upvote`,
+      {
+        commentId,
+        userId,
+        videoId,
+      },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
     return result;
   };
 

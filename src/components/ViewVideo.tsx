@@ -72,6 +72,15 @@ export const ViewVideo = observer(() => {
     commentVideo(comment, videoId);
   };
 
+  const handleUpvoteComment = (id: string) => {
+    const { upvoteComment } = playerStore;
+    const videoId = playerStore?.video?._id;
+    const userId = authStore.currentUser?.userId;
+
+    if (!videoId) return;
+    upvoteComment(id, videoId);
+  };
+
   if (!playerStore.video) return <div>loading</div>;
 
   const videoJsOptions = {
@@ -93,8 +102,6 @@ export const ViewVideo = observer(() => {
 
   const { hasUserDisliked, hasUserLiked, numLikes, numDislikes, comments } =
     playerStore;
-
-  console.log({ comments });
 
   return (
     <div>
@@ -141,9 +148,15 @@ export const ViewVideo = observer(() => {
       <button onClick={handleCommentVideo}>Submit</button>
       <div style={{ marginTop: 15 }}>Comments</div>
       {comments?.map((comment) => (
-        <div style={{ margin: "20px 0px" }}>
+        <div key={comment.id} style={{ margin: "20px 0px" }}>
           {comment.text}
-          <button style={{ marginLeft: 10 }}>UPVOTE</button>
+          <button
+            onClick={() => handleUpvoteComment(comment.id)}
+            disabled={comment.hasUserUpvoted}
+            style={{ marginLeft: 10 }}
+          >
+            {comment.hasUserUpvoted ? "UPVOTED" : "UPVOTE"}
+          </button>
         </div>
       ))}
     </div>
