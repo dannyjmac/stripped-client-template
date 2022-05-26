@@ -1,16 +1,10 @@
-import { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
-import { Routes, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useStore } from "../store";
 
 export const Navigation = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["user"]);
   const { authStore } = useStore();
 
-  const logOut = async () => {
-    authStore.setUser("");
-    removeCookie("user");
-  };
+  const logOut = async () => authStore.logout();
 
   return (
     <div
@@ -23,10 +17,10 @@ export const Navigation = () => {
       }}
     >
       <Link to="/">
-        <div style={{ cursor: "pointer", margin: 20 }}>HOME</div>
+        <div style={{ cursor: "pointer", margin: 20 }}>PAGE 1</div>
       </Link>
-      <Link to="/upload">
-        <div style={{ cursor: "pointer", margin: 20 }}>UPLOAD</div>
+      <Link to="/page-2">
+        <div style={{ cursor: "pointer", margin: 20 }}>PAGE 2</div>
       </Link>
       <div onClick={() => logOut()} style={{ cursor: "pointer", margin: 20 }}>
         LOGOUT

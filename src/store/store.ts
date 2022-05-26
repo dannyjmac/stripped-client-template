@@ -1,35 +1,24 @@
 import { makeAutoObservable } from "mobx";
-import { VideoAPI, SupabaseAuth, LightningAPI } from "../api";
-import { PlayerStore, VideoStore, AuthStore, LightningStore } from "./stores";
+import { AuthAPI } from "../api";
+import { AuthStore } from "./stores";
 
 export class Store {
   // Child Stores
-  playerStore = new PlayerStore(this);
-  videoStore = new VideoStore(this);
   authStore = new AuthStore(this);
-  lightningStore = new LightningStore(this);
 
   // UI Logic state - all the state for all user interaction
   // discover = new DiscoverView(this);
   api: {
-    videoAPI: VideoAPI;
-    authAPI: SupabaseAuth;
-    lightningAPI: LightningAPI;
+    authAPI: AuthAPI;
   };
 
-  constructor(
-    videoAPI: VideoAPI,
-    authAPI: SupabaseAuth,
-    lightningAPI: LightningAPI
-  ) {
+  constructor(authAPI: AuthAPI) {
     makeAutoObservable(this, {}, { deep: false, autoBind: true });
-    this.api = { videoAPI, authAPI, lightningAPI };
+    this.api = { authAPI };
   }
 }
 
 export const createStore = () => {
-  const videoAPI = new VideoAPI();
-  const authAPI = new SupabaseAuth();
-  const lightningAPI = new LightningAPI();
-  return new Store(videoAPI, authAPI, lightningAPI);
+  const authAPI = new AuthAPI();
+  return new Store(authAPI);
 };
