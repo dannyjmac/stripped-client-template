@@ -37,6 +37,8 @@ const App = observer(() => {
 
   const { currentUser } = authStore;
 
+  console.log({ currentUser });
+
   return (
     <div className="App">
       <ToastContainer

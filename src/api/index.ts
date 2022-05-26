@@ -1,3 +1,3 @@
 export { default as VideoAPI } from "./video";
-export { default as AuthAPI } from "./auth";
+export { default as SupabaseAuth } from "./supabase";
 export { default as LightningAPI } from "./lightning";

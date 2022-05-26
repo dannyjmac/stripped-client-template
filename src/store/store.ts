@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { VideoAPI, AuthAPI, LightningAPI } from "../api";
+import { VideoAPI, SupabaseAuth, LightningAPI } from "../api";
 import { PlayerStore, VideoStore, AuthStore, LightningStore } from "./stores";
 
 export class Store {
@@ -13,13 +13,13 @@ export class Store {
   // discover = new DiscoverView(this);
   api: {
     videoAPI: VideoAPI;
-    authAPI: AuthAPI;
+    authAPI: SupabaseAuth;
     lightningAPI: LightningAPI;
   };
 
   constructor(
     videoAPI: VideoAPI,
-    authAPI: AuthAPI,
+    authAPI: SupabaseAuth,
     lightningAPI: LightningAPI
   ) {
     makeAutoObservable(this, {}, { deep: false, autoBind: true });
@@ -29,7 +29,7 @@ export class Store {
 
 export const createStore = () => {
   const videoAPI = new VideoAPI();
-  const authAPI = new AuthAPI();
+  const authAPI = new SupabaseAuth();
   const lightningAPI = new LightningAPI();
   return new Store(videoAPI, authAPI, lightningAPI);
 };

@@ -24,7 +24,7 @@ export default class AuthStore {
         username,
         password
       );
-      if (data?.data) this.setUser(data.data.token);
+      // if (data?.data) this.setUser(data.data.token);
     } catch (err) {
       console.log("Error signing up user", username);
     }
@@ -36,7 +36,7 @@ export default class AuthStore {
   async login(email: string, password: string) {
     try {
       const data = await this._store.api.authAPI.login(email, password);
-      if (data?.data) this.setUser(data.data.token);
+      // if (data?.data) this.setUser(data.data.token);
     } catch (err) {
       console.log("Error logging in user", email);
     }

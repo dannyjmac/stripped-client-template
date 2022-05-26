@@ -5,8 +5,8 @@ import App from "./App";
 import { StoreProvider } from "./store";
 import { createStore } from "./store/store";
 import reportWebVitals from "./reportWebVitals";
-import { CookiesProvider } from "react-cookie";
 import { BrowserRouter } from "react-router-dom";
+import { SupabaseWrapper } from "./config/SupabaseInit";
 
 const store = createStore();
 
@@ -14,9 +14,9 @@ ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <StoreProvider store={store}>
-        <CookiesProvider>
+      <SupabaseWrapper>
           <App />
-        </CookiesProvider>
+        </SupabaseWrapper>
       </StoreProvider>
     </BrowserRouter>
   </React.StrictMode>,
