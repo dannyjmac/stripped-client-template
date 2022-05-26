@@ -6,7 +6,7 @@ import { StoreProvider } from "./store";
 import { createStore } from "./store/store";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-import { SupabaseWrapper } from "./config/SupabaseInit";
+import { SupabaseWrapper } from "./config/supabase";
 
 const store = createStore();
 
@@ -14,7 +14,7 @@ ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <StoreProvider store={store}>
-      <SupabaseWrapper>
+        <SupabaseWrapper>
           <App />
         </SupabaseWrapper>
       </StoreProvider>

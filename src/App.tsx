@@ -9,7 +9,7 @@ import { observer } from "mobx-react-lite";
 import { Auth } from "./components/Auth";
 import { Home } from "./components/Home";
 import { Navigation } from "./components/Navigation";
-import { supabase } from "./config/SupabaseInit";
+import { supabase } from "./config/supabase";
 import { Page2 } from "./components/Page2";
 
 const App = observer(() => {

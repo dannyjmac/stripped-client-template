@@ -1,4 +1,4 @@
-import { supabase } from "../config/SupabaseInit";
+import { supabase } from "../config/supabase";
 import { definitions } from "../types/supabase";
 
 export default class AuthAPI {
