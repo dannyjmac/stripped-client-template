@@ -1,4 +1,4 @@
-# Client Template
+# Stripped Client Template
 
 Stripped back version of Client Template - No Auth, or DB.
 
