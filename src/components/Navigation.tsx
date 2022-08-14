@@ -2,10 +2,6 @@ import { Link } from "react-router-dom";
 import { useStore } from "../store";
 
 export const Navigation = () => {
-  const { authStore } = useStore();
-
-  const logOut = async () => authStore.logout();
-
   return (
     <div
       style={{
@@ -22,9 +18,6 @@ export const Navigation = () => {
       <Link to="/page-2">
         <div style={{ cursor: "pointer", margin: 20 }}>PAGE 2</div>
       </Link>
-      <div onClick={() => logOut()} style={{ cursor: "pointer", margin: 20 }}>
-        LOGOUT
-      </div>
     </div>
   );
 };
